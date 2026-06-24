@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기후변화과학 퀴즈대회 예상 문제</title>
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background-color: #f0f4f8; text-align: center; padding: 40px 20px; color: #333; }
+        .quiz-container { background: white; max-width: 600px; margin: auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { color: #1a73e8; margin-bottom: 30px; }
+        .question { font-size: 1.2em; margin-bottom: 20px; font-weight: bold; word-break: keep-all; line-height: 1.5; }
+        
+        /* 객관식, O/X 버튼 스타일 */
+        .options button { display: block; width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #dcdcdc; border-radius: 8px; background: #fff; font-size: 1em; cursor: pointer; transition: 0.2s; }
+        .options button:hover:not(:disabled) { background: #f1f3f4; }
+        .options button:disabled { cursor: not-allowed; }
+        
+        /* 주관식 입력 스타일 */
+        .short-answer-container { display: flex; gap: 10px; margin-top: 15px; }
+        .short-answer-container input { flex: 1; padding: 14px; border: 1px solid #dcdcdc; border-radius: 8px; font-size: 1em; }
+        .short-answer-container button { padding: 14px 20px; background: #34a853; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: bold; white-space: nowrap; }
+        .short-answer-container button:hover:not(:disabled) { background: #2d9047; }
+        
+        /* 결과 및 해설 스타일 */
+        #result { margin-top: 20px; font-weight: bold; font-size: 1.2em; }
+        .explanation { display: none; margin-top: 20px; padding: 15px; background-color: #e8f0fe; border-left: 5px solid #1a73e8; border-radius: 4px; font-size: 0.95em; text-align: left; line-height: 1.6; }
+        
+        #next-btn { display: none; margin: 25px auto 0; padding: 12px 24px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: bold; }
+        #next-btn:hover { background: #1557b0; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h2>🌍 기후변화과학 퀴즈대회 예상 문제</h2>
+    <div id="quiz">
+        <div class="question" id="question-text">문제가 여기에 나옵니다.</div>
+        <div class="options" id="options"></div>
+    </div>
+    <div id="result"></div>
+    <div class="explanation" id="explanation"></div>
+    <button id="next-btn">다음 문제 ➔</button>
+</div>
+
+<script>
+    // 💡 여기서부터 문제를 계속 추가할 수 있어!
+    // type: "ox" (O/X문제), "mcq" (객관식), "short" (주관식)
+    const quizData = [
+        {
+            type: "ox",
+            question: "온실효과는 지구의 대기가 지구 표면으로부터 나오는 에너지를 흡수하는 효과를 의미한다. [cite: 3769]",
+            options: ["O", "X"],
+            answer: "O",
+            explanation: "온실효과는 지구의 대기가 지구 표면으로부터 나오는 에너지를 흡수하는 효과를 의미한다. 지구 대기에는 온실효과를 돕는 온실가스가 적절하게 존재하고 있다. [cite: 3780] 적당한 온실효과는 지구의 온도를 15℃ 정도로 적절하게 유지하여 생명체가 살 수 있는 환경으로 만들어 준다. [cite: 3781]"
+        },
+        {
+            type: "ox",
+            question: "독도에는 지구대기감시소가 있어 온실가스 농도를 측정할 수 있다. [cite: 5702]",
+            options: ["O", "X"],
+            answer: "O",
+            explanation: "기상청은 충남 안면도, 제주도 고산, 경북 포항, 울릉도·독도에서 온실가스, 반응 가스, 에어로졸 등 37종의 기후변화의 원인이 되는 물질을 관측하여 한반도의 기후변화를 감시하고 있다. [cite: 5709]"
+        },
+        {
+            type: "mcq",
+            question: "이것은 비와 눈이 섞여서 내리는 기상현상으로, 눈 또는 비로 변하는 경우가 많은 매우 불안정한 상태의 강수현상이다. 이것의 이름은 무엇일까요? [cite: 6255]",
+            options: ["함박눈", "날린눈", "우박", "진눈깨비"],
+            answer: "진눈깨비",
+            explanation: "빗방울이 얼거나 부분적으로 녹은 눈송이가 다시 얼어서 만들어진다. 빗방울이나 녹은 눈송이가 대기의 높은 고도에서 떨어질 때, 지표면 근처에 있는 어는점 아래의 공기층을 지나면서 진눈깨비로 바뀐다. [cite: 6267]"
+        },
+        {
+            type: "mcq",
+            question: "다음 중 세계 기상의 날은 언제일까요? [cite: 4104]",
+            options: ["3월 1일", "3월 10일", "3월 23일", "4월 23일"],
+            answer: "3월 23일",
+            explanation: "세계 기상의 날(World Meteorological Day)는 세계 기상 기구가 국제 연합(UN)의 전문 기구로 지정된 지 10주년을 기념하기 위해 제정되었으며, 매년 3월 23일 개최된다. [cite: 4114]"
+        },
+        {
+            type: "short",
+            question: "지구는 여러 종류의 기체로 둘러싸여 있는데 이러한 두꺼운 공기층을 (   )(이)라고 한다. [cite: 5220, 5221]",
+            answer: "대기",
+            explanation: "우리는 이러한 두꺼운 공기층을 '대기'라고 한다. 이러한 대기는 질소 78%, 산소 21%, 아르곤 0.9%, 이산화탄소 0.03% 그리고 미량의 네온, 헬륨, 오존 등으로 구성되어 있다. [cite: 5231]"
+        }
+    ];
+
+    let currentQuestion = 0;
+    const questionEl = document.getElementById("question-text");
+    const optionsEl = document.getElementById("options");
+    const resultEl = document.getElementById("result");
+    const explanationEl = document.getElementById("explanation");
+    const nextBtn = document.getElementById("next-btn");
+
+    function loadQuestion() {
+        // 초기화
+        resultEl.innerText = "";
+        explanationEl.style.display = "none";
+        explanationEl.innerText = "";
+        nextBtn.style.display = "none";
+        optionsEl.innerHTML = "";
+        
+        const currentQuiz = quizData[currentQuestion];
+        questionEl.innerText = currentQuiz.question;
+
+        if (currentQuiz.type === "ox" || currentQuiz.type === "mcq") {
+            // O/X 및 객관식 버튼 생성
+            currentQuiz.options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.onclick = () => checkAnswer(option, button);
+                optionsEl.appendChild(button);
+            });
+        } else if (currentQuiz.type === "short") {
+            // 주관식 입력창 생성
+            const container = document.createElement("div");
+            container.className = "short-answer-container";
+            
+            const input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "정답을 입력하세요";
+            input.id = "short-input";
+            
+            const submitBtn = document.createElement("button");
+            submitBtn.innerText = "제출";
+            submitBtn.onclick = () => checkAnswer(input.value.trim(), submitBtn);
+
+            // 엔터키 쳐도 제출되게 하기
+            input.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    submitBtn.click();
+                }
+            });
+            
+            container.appendChild(input);
+            container.appendChild(submitBtn);
+            optionsEl.appendChild(container);
+        }
+    }
+
+    function checkAnswer(userAnswer, element) {
+        const currentQuiz = quizData[currentQuestion];
+        const correctAnswer = currentQuiz.answer;
+        
+        // 버튼 및 입력창 비활성화
+        if (currentQuiz.type === "short") {
+            document.getElementById("short-input").disabled = true;
+            element.disabled = true;
+        } else {
+            const allButtons = optionsEl.querySelectorAll("button");
+            allButtons.forEach(btn => btn.disabled = true);
+        }
+
+        // 정답 확인
+        if (userAnswer === correctAnswer) {
+            resultEl.innerText = "🎉 정답입니다!";
+            resultEl.style.color = "#34a853";
+            if (currentQuiz.type !== "short") {
+                element.style.background = "#e6f4ea";
+                element.style.borderColor = "#34a853";
+            }
+        } else {
+            resultEl.innerText = "❌ 오답입니다. (정답: " + correctAnswer + ")";
+            resultEl.style.color = "#ea4335";
+            if (currentQuiz.type !== "short") {
+                element.style.background = "#fce8e6";
+                element.style.borderColor = "#ea4335";
+            }
+        }
+
+        // 해설 및 다음 버튼 보여주기
+        explanationEl.innerHTML = "<strong>💡 해설:</strong><br>" + currentQuiz.explanation;
+        explanationEl.style.display = "block";
+        nextBtn.style.display = "block";
+    }
+
+    nextBtn.onclick = () => {
+        currentQuestion++;
+        if (currentQuestion < quizData.length) {
+            loadQuestion();
+        } else {
+            questionEl.innerText = "🏆 모든 문제를 다 풀었습니다! 대회 준비 파이팅!";
+            optionsEl.innerHTML = "";
+            resultEl.innerText = "";
+            explanationEl.style.display = "none";
+            nextBtn.style.display = "none";
+        }
+    };
+
+    // 첫 문제 불러오기
+    loadQuestion();
+</script>
+
+</body>
+</html>
